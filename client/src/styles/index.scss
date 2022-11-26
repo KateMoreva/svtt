@@ -1,3 +1,5 @@
+@import '~bootstrap/scss/mixins';
+@import '~bootstrap/scss/functions';
 @import 'reset';
 @import 'variables';
 @import 'typography';
@@ -12,3 +14,8 @@
 // ui-components
 @import '../components/ui/input';
 @import '../components/ui/searchButton';
+@import '../components/ui/languageButton';
+@import '../components/ui/blockResultSearch';
+@import '../components/ui/similarQueries';
+@import '../components/ui/termsBlock';
+@import '../components/ui/imageBlock';
