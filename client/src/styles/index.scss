@@ -1,0 +1,14 @@
+@import 'reset';
+@import 'variables';
+@import 'typography';
+@import 'defaultStyles';
+
+// pages
+@import '../pages/ui-kit';
+
+// components
+@import '../components/inputSearch';
+
+// ui-components
+@import '../components/ui/input';
+@import '../components/ui/searchButton';
