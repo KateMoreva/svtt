@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
+import org.apache.commons.lang3.Validate;
 import org.apache.commons.math3.util.Pair;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.search.Query;
@@ -43,12 +44,13 @@ public class IndexSearcherComponent implements Searcher {
     public IndexSearcherComponent(@Value("${indexer.partions.amount}") int partitions,
                                   @Value("${indexer.indexDir}") String indexDir,
                                   @NotNull IndexWriterComponent indexWriterComponent) throws LuceneIndexIllegalPartitions {
+        Validate.notNull(indexWriterComponent);
         if (partitions <= 0) {
             throw new LuceneIndexIllegalPartitions("Number of partitions is less than 0");
         }
         this.indexDir = indexDir;
         this.luceneIndexSearchers = new LuceneIndexSearcher[partitions];
-        for (int partition = 1; partition <= partitions; ++partitions) {
+        for (int partition = 1; partition <= partitions; ++partition) {
             luceneIndexSearchers[toIndex(partition)] = new LuceneIndexSearcher(String.valueOf(partition), partition);
         }
         this.indexWriterComponent = indexWriterComponent;
@@ -123,5 +125,9 @@ public class IndexSearcherComponent implements Searcher {
         for (LuceneIndexSearcher luceneIndexSearcher : luceneIndexSearchers) {
             luceneIndexSearcher.close();
         }
+    }
+
+    protected LuceneIndexSearcher[] getLuceneIndexSearchers() {
+        return luceneIndexSearchers;
     }
 }

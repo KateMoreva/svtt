@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class NewsSearcherApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(NewsSearcherApplication.class, args);
-    }
+	public static void main(String[] args) {
+		SpringApplication.run(NewsSearcherApplication.class, args);
+	}
 
 }

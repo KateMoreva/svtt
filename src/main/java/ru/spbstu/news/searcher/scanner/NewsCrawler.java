@@ -1,6 +1,5 @@
 package ru.spbstu.news.searcher.scanner;
 
-import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
@@ -79,7 +78,7 @@ public class NewsCrawler extends WebCrawler {
         }
     }
 
-    private String getText(Document doc) {
+    public String getText(Document doc) {
         String result = "";
         final Elements mailNewsElement = doc.getElementsByClass("article__intro");
         final Elements mailCardElement = doc.getElementsByClass("wrapper cover__inner");
@@ -98,7 +97,7 @@ public class NewsCrawler extends WebCrawler {
         return result;
     }
 
-    private List<String> filterImages(@NotNull final Set<WebURL> urls) {
+    public List<String> filterImages(@NotNull final Set<WebURL> urls) {
         return urls.stream()
                 .filter((url) -> {
                     final String href = url.getURL().toLowerCase();
@@ -109,8 +108,7 @@ public class NewsCrawler extends WebCrawler {
                     try {
                         URL imageUrl = new URL(href);
                         URLConnection conn = imageUrl.openConnection();
-                        InputStream in = conn.getInputStream();
-                        if (in.available() >= (10 * 1024)) {
+                        if (conn.getContentLength() >= (10 * 1024)) {
                             return true;
                         }
                     } catch (Exception ex) {

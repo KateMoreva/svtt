@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.Validate;
 import org.apache.commons.math3.util.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,14 @@ public class TextSearchResultsProcessor implements SearchResultsProcessor<FindBy
     }
 
     @Override
-    public FindByTextResult getFindImageResult(@NotNull String query, @NotNull List<SearchResult> databaseEntities, @NotNull Map<Long, SearchIndexDocument> databaseIdsToDocument, @NotNull Long totalCount) {
+    public FindByTextResult getFindImageResult(@NotNull String query,
+                                               @NotNull List<SearchResult> databaseEntities,
+                                               @NotNull Map<Long, SearchIndexDocument> databaseIdsToDocument,
+                                               @NotNull Long totalCount) {
+        Validate.notNull(query);
+        Validate.notNull(databaseEntities);
+        Validate.notNull(databaseIdsToDocument);
+        Validate.notNull(totalCount);
         Map<SearchItem, SearchCacheItem> collectMap = databaseEntities.stream()
                     .map(entity -> {
                         SearchIndexDocument searchIndexDocument = databaseIdsToDocument.get(entity.getId());
