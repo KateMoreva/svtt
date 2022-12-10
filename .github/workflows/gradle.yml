@@ -58,7 +58,6 @@ jobs:
     - name: Update build
       id: buildUpdate
       run: |
-        git add build/index.js
         git commit -m "Compiled version ${{ env.RELEASE_VERSION }}"
     - name: Update README.md
       id: readmeUpdate
