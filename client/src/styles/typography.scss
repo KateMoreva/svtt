@@ -1,5 +1,4 @@
 @mixin logo-heading {
-  font-family: Roboto;
   font-style: normal;
   font-weight: 900;
   font-size: $logo-heading-font-size;
@@ -7,7 +6,6 @@
 }
 
 @mixin heading-1 {
-  font-family: Roboto;
   font-style: normal;
   font-weight: bold;
   font-size: $heading-1-font-size;
@@ -15,7 +13,6 @@
 }
 
 @mixin text-1 {
-  font-family: Roboto;
   font-style: normal;
   font-weight: normal;
   font-size: $text-1-font-size;
@@ -23,7 +20,6 @@
 }
 
 @mixin text-2 {
-  font-family: Roboto;
   font-style: normal;
   font-weight: 300;
   font-size: $text-2-font-size;
@@ -31,7 +27,6 @@
 }
 
 @mixin text-button {
-  font-family: Roboto;
   font-style: normal;
   font-weight: bold;
   font-size: $text-button-font-size;
@@ -42,15 +37,22 @@
 }
 
 @mixin text-result {
-  font-family: Roboto;
   font-style: normal;
   font-weight: bold;
   font-size: $text-result-font-size;
   line-height: $text-result-line-height;
 }
 
+@mixin text-tab {
+  font-style: normal;
+  font-weight: bold;
+  font-size: $text-tab-font-size;
+  line-height: $text-tab-line-height;
+
+  text-transform: uppercase;
+}
+
 @mixin link {
-  font-family: Roboto;
   font-style: normal;
   font-weight: normal;
   font-size: $link-font-size;

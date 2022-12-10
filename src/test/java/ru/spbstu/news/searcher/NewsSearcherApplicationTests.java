@@ -28,5 +28,4 @@ class NewsSearcherApplicationTests {
         assertTrue(newSearchResult.equals(searchResult));
         searchResultService.removeSearchResult(newSearchResult);
     }
-
 }
