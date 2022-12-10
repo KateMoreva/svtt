@@ -12,6 +12,9 @@ configurations {
     compileOnly {
         extendsFrom annotationProcessor
     }
+    all {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+    }
 }
 
 repositories {
@@ -24,6 +27,8 @@ dependencies {
     implementation group: 'org.apache.lucene', name: 'lucene-core', version: '8.10.0'
     implementation group: 'org.apache.lucene', name: 'lucene-analyzers-common', version: '8.10.0'
     implementation group: 'org.apache.lucene', name: 'lucene-memory', version: '8.10.0'
+    implementation group: 'org.apache.solr', name: 'solr-core', version: '8.10.0'
+
     implementation 'org.postgresql:postgresql:42.1.4'
     // https://mvnrepository.com/artifact/com.google.guava/guava
     implementation 'com.google.guava:guava:31.0.1-jre'
@@ -39,6 +44,10 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    // https://mvnrepository.com/artifact/edu.uci.ics/crawler4j
+    implementation 'edu.uci.ics:crawler4j:4.2'
+    // https://mvnrepository.com/artifact/org.jsoup/jsoup
+    implementation 'org.jsoup:jsoup:1.14.3'
 }
 
 test {

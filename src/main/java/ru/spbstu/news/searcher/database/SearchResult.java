@@ -1,10 +1,8 @@
 package ru.spbstu.news.searcher.database;
 
-import com.google.common.collect.Iterables;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -12,9 +10,13 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+
+import com.google.common.collect.Iterables;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @NoArgsConstructor
@@ -32,10 +34,11 @@ public class SearchResult {
     @GeneratedValue
     private Long id;
 
-    @Column
+    @Column(columnDefinition="TEXT")
     private String url;
 
     @ElementCollection(fetch = FetchType.EAGER)
+    @Column(columnDefinition = "TEXT")
     private List<String> imageUrls;
 
     @Override
@@ -44,10 +47,10 @@ public class SearchResult {
         if (o == null || getClass() != o.getClass()) return false;
         SearchResult that = (SearchResult) o;
         return Objects.equals(id, that.id) &&
-            Objects.equals(url, that.url) &&
-            Iterables.elementsEqual(
-                imageUrls != null ? imageUrls : new ArrayList<>(),
-                that.imageUrls != null ? that.imageUrls : new ArrayList<>());
+                Objects.equals(url, that.url) &&
+                Iterables.elementsEqual(
+                        imageUrls != null ? imageUrls : new ArrayList<>(),
+                        that.imageUrls != null ? that.imageUrls : new ArrayList<>());
     }
 
     @Override
@@ -55,3 +58,4 @@ public class SearchResult {
         return Objects.hash(id, url, imageUrls);
     }
 }
+
