@@ -10,6 +10,10 @@
         <module name="svtt.main" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="11" />
+    <bytecodeTargetLevel target="11">
+      <module name="svtt.src.test.integration" target="14" />
+      <module name="svtt.src.test.integration.main" target="14" />
+      <module name="svtt.src.test.integration.test" target="14" />
+    </bytecodeTargetLevel>
   </component>
 </project>

@@ -112,14 +112,14 @@ public final class TokenizerChain extends SolrAnalyzer {
     }
 
     @Override
-    protected Analyzer.TokenStreamComponents createComponents(String fieldName) {
+    protected TokenStreamComponents createComponents(String fieldName) {
         Tokenizer tk = tokenizer.create(attributeFactory(fieldName));
         TokenStream ts = tk;
         for (TokenFilterFactory filter : filters) {
             ts = filter.create(ts);
         }
         ts = new SnowballFilter(ts, new RussianStemmer());
-        return new Analyzer.TokenStreamComponents(tk, ts);
+        return new TokenStreamComponents(tk, ts);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package ru.spbstu.news.searcher.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -23,8 +24,8 @@ public class TitleExtractor {
 
     private static final Logger logger = LoggerFactory.getLogger(TitleExtractor.class);
 
-    private final static Integer LENGTH_TO_SPLIT_FULL_TEXT = 100;
-    private final static Integer DEFAULT_LENGTH_OF_TITLE_FROM_START = 20;
+    public final static Integer LENGTH_TO_SPLIT_FULL_TEXT = 30;
+    public final static Integer DEFAULT_LENGTH_OF_TITLE_FROM_START = 20;
 
     private final InMemoryIndexComponent inMemoryIndexComponent;
 
@@ -70,12 +71,17 @@ public class TitleExtractor {
         return defaultResult(fullText);
     }
 
-    private String defaultResult(@NotNull String fullText) {
+    protected String defaultResult(@NotNull String fullText) {
+        Validate.notNull(fullText);
         return fullText.substring(0, Math.min(fullText.length(), DEFAULT_LENGTH_OF_TITLE_FROM_START));
     }
 
     @NotNull
-    private List<String> getChunks(@NotNull String fullText) {
+    protected List<String> getChunks(@NotNull String fullText) {
+        Validate.notNull(fullText);
+        if (StringUtils.isBlank(fullText)) {
+            return Collections.emptyList();
+        }
         String[] split = fullText.split(" ");
         List<String> chunks = new ArrayList<>();
         StringBuilder current = new StringBuilder();
