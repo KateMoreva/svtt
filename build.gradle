@@ -1,7 +1,7 @@
 plugins {
-    id 'org.springframework.boot' version '2.5.5'
-    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-    id 'java'
+	id 'org.springframework.boot' version '2.5.5'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
 }
 
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
@@ -12,29 +12,29 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
 configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
     all {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
     }
 }
 
 repositories {
-    mavenCentral()
+	mavenCentral()
 }
 
 dependencies {
     implementation "org.slf4j:slf4j-api:1.7.26"
 
-    implementation group: 'org.apache.lucene', name: 'lucene-core', version: '8.10.0'
-    implementation group: 'org.apache.lucene', name: 'lucene-analyzers-common', version: '8.10.0'
-    implementation group: 'org.apache.lucene', name: 'lucene-memory', version: '8.10.0'
+	implementation group: 'org.apache.lucene', name: 'lucene-core', version: '8.10.0'
+	implementation group: 'org.apache.lucene', name: 'lucene-analyzers-common', version: '8.10.0'
+	implementation group: 'org.apache.lucene', name: 'lucene-memory', version: '8.10.0'
     implementation group: 'org.apache.solr', name: 'solr-core', version: '8.10.0'
 
     implementation 'org.postgresql:postgresql:42.1.4'
-    // https://mvnrepository.com/artifact/com.google.guava/guava
-    implementation 'com.google.guava:guava:31.0.1-jre'
+	// https://mvnrepository.com/artifact/com.google.guava/guava
+	implementation 'com.google.guava:guava:31.0.1-jre'
 
     implementation "redis.clients:jedis:3.0.1"
     implementation "com.intellij:annotations:12.0"
@@ -42,8 +42,8 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3:3.12.0'
 
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    testImplementation 'junit:junit:4.12'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	testImplementation 'junit:junit:4.12'
     // https://mvnrepository.com/artifact/org.hamcrest/hamcrest-all
     testImplementation group: 'org.hamcrest', name: 'hamcrest-all', version: '1.3'
     // https://mvnrepository.com/artifact/org.mockito/mockito-core
@@ -52,13 +52,13 @@ dependencies {
     testImplementation group: 'org.mockito', name: 'mockito-inline', version: '3.8.0'
 
 
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    // https://mvnrepository.com/artifact/edu.uci.ics/crawler4j
-    implementation 'edu.uci.ics:crawler4j:4.2'
-    // https://mvnrepository.com/artifact/org.jsoup/jsoup
-    implementation 'org.jsoup:jsoup:1.14.3'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	// https://mvnrepository.com/artifact/edu.uci.ics/crawler4j
+	implementation 'edu.uci.ics:crawler4j:4.2'
+	// https://mvnrepository.com/artifact/org.jsoup/jsoup
+	implementation 'org.jsoup:jsoup:1.14.3'
 }
 
 sourceSets {
@@ -95,9 +95,9 @@ tasks.withType(Test) {
     testLogging {
         // set options for log level LIFECYCLE
         events TestLogEvent.FAILED,
-                TestLogEvent.PASSED,
-                TestLogEvent.SKIPPED,
-                TestLogEvent.STANDARD_OUT
+               TestLogEvent.PASSED,
+               TestLogEvent.SKIPPED,
+               TestLogEvent.STANDARD_OUT
         exceptionFormat TestExceptionFormat.FULL
         showExceptions true
         showCauses true
@@ -106,11 +106,11 @@ tasks.withType(Test) {
         // set options for log level DEBUG and INFO
         debug {
             events TestLogEvent.STARTED,
-                    TestLogEvent.FAILED,
-                    TestLogEvent.PASSED,
-                    TestLogEvent.SKIPPED,
-                    TestLogEvent.STANDARD_ERROR,
-                    TestLogEvent.STANDARD_OUT
+                   TestLogEvent.FAILED,
+                   TestLogEvent.PASSED,
+                   TestLogEvent.SKIPPED,
+                   TestLogEvent.STANDARD_ERROR,
+                   TestLogEvent.STANDARD_OUT
             exceptionFormat TestExceptionFormat.FULL
         }
         info.events = debug.events

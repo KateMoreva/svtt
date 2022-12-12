@@ -1,5 +1,7 @@
 package ru.spbstu.news.searcher.indexes.component;
 
+import java.util.List;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.math3.util.Pair;
 import org.apache.lucene.queryparser.classic.ParseException;
@@ -10,13 +12,12 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+
 import ru.spbstu.news.searcher.indexes.SearchIndexDocument;
 import ru.spbstu.news.searcher.indexes.SearchIndexDocumentConverter;
 import ru.spbstu.news.searcher.indexes.exceptions.LuceneIndexIllegalPartitions;
 import ru.spbstu.news.searcher.indexes.exceptions.LuceneIndexingException;
 import ru.spbstu.news.searcher.indexes.exceptions.LuceneOpenException;
-
-import java.util.List;
 
 import static org.mockito.Mockito.spy;
 
@@ -102,4 +103,17 @@ public class IndexSearcherComponentTest {
         Long expected = 0L;
         Assert.assertEquals(expected, results.getSecond());
     }
+
+    @Test
+    public void close_Normal() throws LuceneIndexIllegalPartitions {
+        int partitions = 1;
+        String indexDir = "/indexDir";
+        IndexSearcherComponent indexSearcherComponent = new IndexSearcherComponent(partitions, indexDir, indexWriterComponent);
+        indexSearcherComponent.getLuceneIndexSearchers()[0] = spy(indexSearcherComponent.getLuceneIndexSearchers()[0]);
+        Mockito.doNothing().when(indexSearcherComponent.getLuceneIndexSearchers()[0]).close();
+        indexSearcherComponent.close();
+        Mockito.verify(indexSearcherComponent.getLuceneIndexSearchers()[0], Mockito.times(1))
+                .close();
+    }
+
 }

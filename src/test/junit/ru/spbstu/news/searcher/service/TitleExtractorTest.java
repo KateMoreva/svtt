@@ -1,5 +1,7 @@
 package ru.spbstu.news.searcher.service;
 
+import java.util.List;
+
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexableField;
 import org.apache.lucene.queryparser.classic.ParseException;
@@ -14,10 +16,9 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+
 import ru.spbstu.news.searcher.indexes.SearchIndexDocumentConverter;
 import ru.spbstu.news.searcher.indexes.component.InMemoryIndexComponent;
-
-import java.util.List;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TitleExtractorTest {

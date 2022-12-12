@@ -1,6 +1,7 @@
 package ru.spbstu.news.searcher.scanner;
 
 import org.jetbrains.annotations.NotNull;
+import org.jsoup.helper.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,11 +20,12 @@ public class NewsCrawlerController {
 
     @Autowired
     public NewsCrawlerController(@NotNull final NewsCrawlerFactory newsCrawlerFactory) {
+        Validate.notNull(newsCrawlerFactory);
         this.newsCrawlerFactory = newsCrawlerFactory;
     }
 
     public void launchCrawling() throws Exception {
-        for (String resource : CrawlerConfig.resources) {
+        for (String resource : newsCrawlerFactory.crawlerConfig.getResources()) {
             CrawlConfig config = new CrawlConfig();
 
             configure(config);
@@ -35,19 +37,24 @@ public class NewsCrawlerController {
 
             controller.addSeed(resource);
 
-            controller.startNonBlocking(newsCrawlerFactory, 10);
+            if (newsCrawlerFactory.crawlerConfig.getBlocking()) {
+                controller.start(newsCrawlerFactory, newsCrawlerFactory.crawlerConfig.getNumberOfCrawlers());
+            } else {
+                controller.startNonBlocking(newsCrawlerFactory, newsCrawlerFactory.crawlerConfig.getNumberOfCrawlers());
+            }
+
         }
     }
 
-    private void configure(@NotNull final CrawlConfig config) {
+    public void configure(@NotNull final CrawlConfig config) {
         // delay
-        config.setPolitenessDelay(100);
+        config.setPolitenessDelay(newsCrawlerFactory.crawlerConfig.getDelayPolicy());
         // cache folder
         config.setCrawlStorageFolder(Files.createTempDir().getAbsolutePath());
         // parsing depth
 //        config.setMaxDepthOfCrawling(1);
         // parsing count
-        config.setMaxPagesToFetch(200);
+        config.setMaxPagesToFetch(newsCrawlerFactory.crawlerConfig.getMaxPagesToFetch());
         // resume after process death
         config.setResumableCrawling(true);
     }
