@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +30,7 @@ import ru.spbstu.news.searcher.service.SearchResultService;
 @RequestMapping(value = "/search")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class SearchController {
+    private static final Logger logger = LoggerFactory.getLogger(SearchController.class);
 
     private final SearchResultService searchResultService;
     private final NewsCrawlerController newsCrawlerController;
@@ -47,6 +50,7 @@ public class SearchController {
         Validate.notNull(page);
         Validate.notNull(findRequest);
         try {
+            logger.info("findByText, request: [{}]", findRequest);
             FindByTextResult textResult = searchResultService.findByText(findRequest.getQuery(), page);
             return ResponseEntity.ok(textResult);
         } catch (Exception e) {
