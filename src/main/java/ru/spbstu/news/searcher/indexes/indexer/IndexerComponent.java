@@ -19,7 +19,7 @@ public interface IndexerComponent {
 
     void delete(@NotNull Term term);
 
-    void commit() throws IOException;
+    boolean commit() throws IOException;
 
     void close();
 
