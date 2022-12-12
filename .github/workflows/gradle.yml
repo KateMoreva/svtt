@@ -38,18 +38,10 @@ jobs:
         run: chmod +x gradlew
       - name: Build with Gradle
         run: ./gradlew build -x test
-      - name: Generate versions
-        uses: HardNorth/github-version-generate@v1.3.0
-        with:
-          version-source: file
-          version-file: gradle.properties
-          version-file-extraction-pattern: '(?<=version=).+'
-      - name: Release with Gradle
-        id: release
-        run: |
-          ./gradlew release -Prelease.useAutomaticVersion=true \
-          -Prelease.releaseVersion=${{ env.RELEASE_VERSION }} \
-          -Prelease.newVersion=${{ env.NEXT_VERSION }}
+
+      - name: Git Version
+        uses: codacy/git-version@2.4.0
+
   unit-tests:
     runs-on: macos-latest
     steps:
