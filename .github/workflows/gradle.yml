@@ -14,6 +14,17 @@ on:
   pull_request:
     branches: [ main, development ]
 
+env:
+  VERSION_FILE: package.json
+  ADDITIONAL_VERSION_FILE: package-lock.json
+  VERSION_EXTRACT_PATTERN: '"version": "([^"]+)",'
+  VERSION_REPLACE_PATTERN: '"version": "\1",'
+  GH_USER_NAME: github.actor
+  CHANGE_LOG_FILE: CHANGELOG.md
+  TMP_SUFFIX: _updated
+  README_FILE: README.md
+  README_VERSION_PLACEHOLDER: $LATEST_VERSION
+
 jobs:
   build:
 
@@ -38,7 +49,76 @@ jobs:
         run: chmod +x gradlew
       - name: Build with Gradle
         run: ./gradlew build -x test
+      - name: Update build
+        id: buildUpdate
+        run: |
+          git commit -m "Compiled version ${{ env.RELEASE_VERSION }}"
+      - name: Update README.md
+        id: readmeUpdate
+        run: |
+          sed 's/${{ env.README_VERSION_PLACEHOLDER }}/${{ env.RELEASE_VERSION }}/g' ${{ env.README_TEMPLATE_FILE }} > ${{ env.README_FILE }}
+          git add ${{ env.README_FILE }}
+          git commit -m "Readme update"
+      - name: Update CHANGELOG.md
+        id: changelogUpdate
+        run: |
+          sed '/\[Unreleased\]/q' ${{ env.CHANGE_LOG_FILE }} >> ${{ env.CHANGE_LOG_FILE }}${{ env.TMP_SUFFIX }}
+          sed -E '1,/#?#\s*\[Unreleased\]/d' ${{ env.CHANGE_LOG_FILE }} | sed -E '/#?#\s*\[/q' | \
+          { echo -e '\n## [${{ env.RELEASE_VERSION }}]'; sed '$d'; } >> ${{ env.CHANGE_LOG_FILE }}${{ env.TMP_SUFFIX }}
+          grep -E '#?#\s*\[[0-9]' ${{ env.CHANGE_LOG_FILE }} | head -n1 >> ${{ env.CHANGE_LOG_FILE }}${{ env.TMP_SUFFIX }}
+          sed -E '1,/#?#\s*\[[0-9]/d' ${{ env.CHANGE_LOG_FILE }} >> ${{ env.CHANGE_LOG_FILE }}${{ env.TMP_SUFFIX }}
+          rm ${{ env.CHANGE_LOG_FILE }}
+          mv ${{ env.CHANGE_LOG_FILE }}${{ env.TMP_SUFFIX }} ${{ env.CHANGE_LOG_FILE }}
+          git add ${{ env.CHANGE_LOG_FILE }}
+          git commit -m "Changelog update"
+          git push
+      - name: Tagging new version
+        id: newVersionTag
+        run: |
+          RELEASE_TAG="v${{ env.RELEASE_VERSION }}"
+          MINOR_TAG="v${{ env.RELEASE_VERSION_MAJOR }}.${{ env.RELEASE_VERSION_MINOR }}"
+          MAJOR_TAG="v${{ env.RELEASE_VERSION_MAJOR }}"
+          git tag -d "${MINOR_TAG}" || true
+          git tag -d "${MAJOR_TAG}" || true
+          git push origin ":${MINOR_TAG}" || true
+          git push origin ":${MAJOR_TAG}" || true
+          git tag -a "${RELEASE_TAG}" -m "Release ${{ env.RELEASE_VERSION }}"
+          git tag -a "${MINOR_TAG}" -m "Tag latest minor version"
+          git tag -a "${MAJOR_TAG}" -m "Tag latest major version"
+          git push --tags
+      - name: Read changelog Entry
+        id: readChangelogEntry
+        uses: mindsers/changelog-reader-action@v1.3.1
+        with:
+          version: ${{ env.RELEASE_VERSION }}
+          path: ./${{ env.CHANGE_LOG_FILE }}
 
+      - name: Create Release
+        id: createRelease
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ env.RELEASE_VERSION }}
+          release_name: Release ${{ env.RELEASE_VERSION }}
+          body: ${{ steps.readChangelogEntry.outputs.log_entry }}
+          draft: false
+          prerelease: false
+      - name: Update version file
+        id: versionFileUpdate
+        run: |
+          export CURRENT_VERSION_VALUE=`echo '${{ env.CURRENT_VERSION }}' | sed -E 's/(.*)/${{ env.VERSION_REPLACE_PATTERN }}/'`
+          export NEXT_VERSION_VALUE=`echo '${{ env.NEXT_VERSION }}' | sed -E 's/(.*)/${{ env.VERSION_REPLACE_PATTERN }}/'`
+          sed "s/${CURRENT_VERSION_VALUE}/${NEXT_VERSION_VALUE}/g" ${{ env.VERSION_FILE }} > ${{ env.VERSION_FILE }}${{ env.TMP_SUFFIX }}
+          sed "s/${CURRENT_VERSION_VALUE}/${NEXT_VERSION_VALUE}/g" ${{ env.ADDITIONAL_VERSION_FILE }} > ${{ env.ADDITIONAL_VERSION_FILE }}${{ env.TMP_SUFFIX }}
+          rm ${{ env.VERSION_FILE }}
+          mv ${{ env.VERSION_FILE }}${{ env.TMP_SUFFIX }} ${{ env.VERSION_FILE }}
+          rm ${{ env.ADDITIONAL_VERSION_FILE }}
+          mv ${{ env.ADDITIONAL_VERSION_FILE }}${{ env.TMP_SUFFIX }} ${{ env.ADDITIONAL_VERSION_FILE }}
+          git add ${{ env.VERSION_FILE }}
+          git add ${{ env.ADDITIONAL_VERSION_FILE }}
+          git commit -m "Version update"
+          git push
 
   unit-tests:
     runs-on: macos-latest
