@@ -15,13 +15,13 @@ import org.mockito.junit.MockitoJUnitRunner;
 import com.google.common.collect.ImmutableMap;
 
 import ru.spbstu.news.searcher.cache.Cache;
-import ru.spbstu.news.searcher.controller.result.FindByTextResult;
-import ru.spbstu.news.searcher.controller.result.SearchItem;
+import ru.spbstu.news.searcher.controller.result.FindImageResult;
+import ru.spbstu.news.searcher.controller.result.ImageItem;
 import ru.spbstu.news.searcher.database.SearchResult;
 import ru.spbstu.news.searcher.indexes.SearchIndexDocument;
 
 @RunWith(MockitoJUnitRunner.class)
-public class TextSearchResultsProcessorTest {
+public class ImageSearchResultsProcessorTest {
 
     private static final String QUERY = "футбол";
     private static final List<SearchResult> DATABASE_ENTITIES = Collections.emptyList();
@@ -34,44 +34,46 @@ public class TextSearchResultsProcessorTest {
     @Mock
     private TitleExtractor titleExtractor;
 
-    private TextSearchResultsProcessor textSearchResultsProcessor;
+    private ImageSearchResultsProcessor imageSearchResultsProcessor;
 
     @Before
     public void setUp() {
-        this.textSearchResultsProcessor = new TextSearchResultsProcessor(cache, titleExtractor);
+        this.imageSearchResultsProcessor = new ImageSearchResultsProcessor(cache, titleExtractor);
     }
 
-    @Test(expected = NullPointerException.class)
+        @Test(expected = NullPointerException.class)
     public void getFindImageResult_QueryNull() {
-        textSearchResultsProcessor.getFindImageResult(null, DATABASE_ENTITIES, DATABASE_IDS_TO_DOCUMENT, TOTAL_COUNT);
+        imageSearchResultsProcessor.getFindImageResult(null, DATABASE_ENTITIES, DATABASE_IDS_TO_DOCUMENT, TOTAL_COUNT);
     }
 
     @Test(expected = NullPointerException.class)
     public void getFindImageResult_DatabaseEntitiesNull() {
-        textSearchResultsProcessor.getFindImageResult(QUERY, null, DATABASE_IDS_TO_DOCUMENT, TOTAL_COUNT);
+        imageSearchResultsProcessor.getFindImageResult(QUERY, null, DATABASE_IDS_TO_DOCUMENT, TOTAL_COUNT);
     }
 
     @Test(expected = NullPointerException.class)
     public void getFindImageResult_DatabaseIdsToDocumentNull() {
-        textSearchResultsProcessor.getFindImageResult(QUERY, DATABASE_ENTITIES, null, TOTAL_COUNT);
+        imageSearchResultsProcessor.getFindImageResult(QUERY, DATABASE_ENTITIES, null, TOTAL_COUNT);
     }
 
     @Test(expected = NullPointerException.class)
     public void getFindImageResult_TotalCountNull() {
-        textSearchResultsProcessor.getFindImageResult(QUERY, DATABASE_ENTITIES, DATABASE_IDS_TO_DOCUMENT, null);
+        imageSearchResultsProcessor.getFindImageResult(QUERY, DATABASE_ENTITIES, DATABASE_IDS_TO_DOCUMENT, null);
     }
 
     @Test
     public void getFindImageResult_Normal() {
-        long databaseId1 = 1L;
+         long databaseId1 = 1L;
         String fullText1 = "Футбол - это круто!";
         String url1 = "url1";
+        String imageUrl1 = "imageUrl1";
         long databaseId2 = 2L;
         String fullText2 = "Футбол - это не круто!";
         String url2 = "url2";
+        String imageUrl2 = "imageUrl2";
         List<SearchResult> databaseEntities = List.of(
-                new SearchResult(databaseId1, url1, List.of("imageUrl1")),
-                new SearchResult(databaseId2, url2, List.of("imageUrl2"))
+                new SearchResult(databaseId1, url1, List.of(imageUrl1)),
+                new SearchResult(databaseId2, url2, List.of(imageUrl2))
         );
         Map<Long, SearchIndexDocument> databaseIdsToDocument = ImmutableMap.of(
                 databaseId1, new SearchIndexDocument(databaseId1, fullText1),
@@ -80,16 +82,16 @@ public class TextSearchResultsProcessorTest {
         Mockito.doReturn(fullText1).when(titleExtractor).getTitleFromFullText(fullText1, databaseId1, QUERY);
         Mockito.doReturn(fullText2).when(titleExtractor).getTitleFromFullText(fullText2, databaseId2, QUERY);
         Mockito.doNothing().when(cache).put(Mockito.any(), Mockito.any(), Mockito.any());
-        FindByTextResult findImageResult = textSearchResultsProcessor.getFindImageResult(QUERY, databaseEntities, databaseIdsToDocument, TOTAL_COUNT);
-        Assert.assertEquals(TOTAL_COUNT, findImageResult.getTotalCount());
-        List<SearchItem> searchItemsResult = findImageResult.getSearchItems();
+        FindImageResult findImageResult = imageSearchResultsProcessor.getFindImageResult(QUERY, databaseEntities, databaseIdsToDocument, TOTAL_COUNT);
+        Assert.assertEquals(2, findImageResult.getTotalCount());
+        List<ImageItem> searchItemsResult = findImageResult.getImageItems();
         Assert.assertEquals(databaseEntities.size(), searchItemsResult.size());
-        List<SearchItem> searchItemsExpected = List.of(
-                new SearchItem(databaseId1, fullText1, url1),
-                new SearchItem(databaseId2, fullText2, url2)
+        List<ImageItem> searchItemsExpected = List.of(
+                new ImageItem(databaseId1,  imageUrl1, fullText1, url1),
+                new ImageItem(databaseId2, imageUrl2, fullText2, url2)
         );
-        for (SearchItem searchItem : searchItemsResult) {
-            Assert.assertTrue(searchItemsExpected.contains(searchItem));
+        for (ImageItem imageItem : searchItemsResult) {
+            Assert.assertTrue(searchItemsExpected.contains(imageItem));
         }
         Mockito.verify(cache, Mockito.times(1))
                 .put(Mockito.any(), Mockito.any(), Mockito.any());

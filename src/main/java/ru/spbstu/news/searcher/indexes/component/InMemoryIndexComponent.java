@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang3.Validate;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
@@ -37,7 +38,8 @@ public class InMemoryIndexComponent {
     private final Analyzer analyzer ;
     private final InMemoryIndexDirectoryRepository inMemoryIndexDirectoryRepository;
 
-    public InMemoryIndexComponent(InMemoryIndexDirectoryRepository inMemoryIndexDirectoryRepository) {
+    public InMemoryIndexComponent(@NotNull InMemoryIndexDirectoryRepository inMemoryIndexDirectoryRepository) {
+        Validate.notNull(inMemoryIndexDirectoryRepository);
         this.analyzer = AnalyzerProvider.provide();
         this.inMemoryIndexDirectoryRepository = inMemoryIndexDirectoryRepository;
     }
@@ -79,6 +81,8 @@ public class InMemoryIndexComponent {
 
     public void deleteByDatabaseId(@NotNull Long databaseId,
                                    @NotNull RAMDirectory directory) {
+        Validate.notNull(databaseId);
+        Validate.notNull(directory);
         Term term = SearchIndexDocumentConverter.createDatabaseIdTerm(databaseId);
         try (IndexWriter writer = new IndexWriter(directory, new IndexWriterConfig(analyzer))) {
             writer.deleteDocuments(term);
