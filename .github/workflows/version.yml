@@ -1,0 +1,61 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-gradle
+
+name: Java version updater
+
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  release:
+
+    runs-on: macos-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK 11
+      uses: actions/setup-java@v2
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+    - name: Cache Gradle packages
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+        restore-keys: ${{ runner.os }}-gradle
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+    - name: Git Semantic Version
+      uses: PaulHatch/semantic-version@v5.0.0-beta
+      with:
+        tag_prefix: "v"
+        major_pattern: "(MAJOR)"
+        major_regexp_flags: ""
+        minor_pattern: "(MINOR)"
+        minor_regexp_flags: ""
+        bump_each_commit: false
+        search_commit_body: false
+        user_format_type: "json"
+    - name: Tag Release
+      run: |
+        git tag ${{ steps.main.outputs.version_tag }}
+        git push origin ${{ steps.main.outputs.version_tag }}
+    - name: Release with Gradle
+      id: release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        ./gradlew publishMavenPublicationToGitHubPackagesRepository -Prelease.useAutomaticVersion=true \
+        -Prelease.releaseVersion=${{ env.RELEASE_VERSION }} \
+        -Prelease.newVersion=${{ env.NEXT_VERSION }}

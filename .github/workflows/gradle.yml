@@ -20,36 +20,25 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 11
-        uses: actions/setup-java@v2
-        with:
-          java-version: '11'
-          distribution: 'temurin'
-      - name: Cache Gradle packages
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
-          restore-keys: ${{ runner.os }}-gradle
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-      - name: Build with Gradle
-        run: ./gradlew build -x test
-      - name: Git Semantic Version
-        uses: PaulHatch/semantic-version@v5.0.0-beta
-        with:
-          tag_prefix: "v"
-          major_pattern: "(MAJOR)"
-          major_regexp_flags: ""
-          minor_pattern: "(MINOR)"
-          minor_regexp_flags: ""
-          format: "${major}.${minor}.${patch}-prerelease${increment}"
-          bump_each_commit: false
-          search_commit_body: false
-          user_format_type: "json"
+    - uses: actions/checkout@v2
+    - name: Set up JDK 11
+      uses: actions/setup-java@v2
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+    - name: Cache Gradle packages
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+        restore-keys: ${{ runner.os }}-gradle
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+    - name: Build with Gradle
+      run: ./gradlew build -x test
+
 
   unit-tests:
     runs-on: macos-latest
@@ -76,8 +65,8 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v2
         with:
-          name: Test Results
-          path: "**/build/test-results/test/**/*.xml"
+            name: Test Results
+            path: "**/build/test-results/test/**/*.xml"
 
 
   integration-tests:
@@ -107,8 +96,8 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v2
         with:
-          name: Test Results
-          path: "**/build/test-results/integrationTest/**/*.xml"
+            name: Test Results
+            path: "**/build/test-results/integrationTest/**/*.xml"
 
 
   end-to-end-tests:
@@ -145,6 +134,7 @@ jobs:
             name: Test Results
             path: "**/build/test-results/uiTest/**/*.xml"
 
+
   publish-unit-test-results:
     name: "Publish Unit Tests Results"
     needs: unit-tests
@@ -176,7 +166,6 @@ jobs:
         uses: EnricoMi/publish-unit-test-result-action/composite@v1
         with:
           files: artifacts/**/*.xml
-
 
   publish-ui-test-results:
     name: "Publish UI Tests Results"
