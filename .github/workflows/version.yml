@@ -48,7 +48,6 @@ jobs:
         search_commit_body: false
         user_format_type: "json"
     - name: Tag Release
-      repo-token: "${{ secrets.GITHUB_TOKEN }}"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
