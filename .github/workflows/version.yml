@@ -52,8 +52,6 @@ jobs:
         git push origin ${{ steps.main.outputs.version_tag }}
     - name: Release with Gradle
       id: release
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         ./gradlew publishMavenPublicationToGitHubPackagesRepository -Prelease.useAutomaticVersion=true \
         -Prelease.releaseVersion=${{ env.RELEASE_VERSION }} \
