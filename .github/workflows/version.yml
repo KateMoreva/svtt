@@ -10,9 +10,7 @@ name: Java version updater
 
 on:
   push:
-    branches: [ main, development ]
-  pull_request:
-    branches: [ main, development ]
+    branches: [ main ]
 
 jobs:
   release:
@@ -51,8 +49,8 @@ jobs:
         user_format_type: "json"
     - name: Tag Release
       run: |
-        git tag ${{ steps.tag_version_main.outputs.version_tag }}
-        git push origin ${{ steps.tag_version_main.outputs.version_tag }}
+        git tag ${{ steps.main.outputs.version_tag }}
+        git push origin ${{ steps.main.outputs.version_tag }}
     - name: Release with Gradle
       id: release
       env:
