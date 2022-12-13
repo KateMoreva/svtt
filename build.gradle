@@ -156,7 +156,13 @@ tasks.withType(Test) {
     }
 }
 
-task publishing {
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'ru.spbstu'
+            from components.java
+        }
+    }
     repositories {
         maven {
             name = "GitHubPackages"

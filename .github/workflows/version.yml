@@ -49,11 +49,15 @@ jobs:
         bump_each_commit: false
         search_commit_body: false
         user_format_type: "json"
+    - name: Tag Release
+      run: |
+        git tag ${{ steps.tag_version_main.outputs.version_tag }}
+        git push origin ${{ steps.tag_version_main.outputs.version_tag }}
     - name: Release with Gradle
       id: release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        ./gradlew release -Prelease.useAutomaticVersion=true \
+        ./gradlew publishMavenPublicationToGitHubPackagesRepository -Prelease.useAutomaticVersion=true \
         -Prelease.releaseVersion=${{ env.RELEASE_VERSION }} \
         -Prelease.newVersion=${{ env.NEXT_VERSION }}
