@@ -18,7 +18,9 @@ jobs:
   release:
 
     runs-on: macos-latest
-
+    permissions:
+      contents: read
+      packages: write
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 11
@@ -49,6 +51,8 @@ jobs:
         user_format_type: "json"
     - name: Release with Gradle
       id: release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         ./gradlew release -Prelease.useAutomaticVersion=true \
         -Prelease.releaseVersion=${{ env.RELEASE_VERSION }} \
