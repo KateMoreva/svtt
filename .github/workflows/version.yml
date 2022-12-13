@@ -16,9 +16,8 @@ jobs:
   release:
 
     runs-on: macos-latest
-    permissions:
-      contents: read
-      packages: write
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 11
@@ -48,8 +47,6 @@ jobs:
         search_commit_body: false
         user_format_type: "json"
     - name: Tag Release
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         git tag ${{ steps.main.outputs.version_tag }}
         git push origin ${{ steps.main.outputs.version_tag }}
