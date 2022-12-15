@@ -37,6 +37,7 @@ jobs:
       run: chmod +x gradlew
     - name: Git Semantic Version
       uses: PaulHatch/semantic-version@v5.0.0-beta
+      id: sem_tag
       with:
         tag_prefix: "v"
         major_pattern: "(MAJOR)"
@@ -48,11 +49,10 @@ jobs:
         user_format_type: "json"
     - name: Tag Release
       run: |
-        git tag ${{ steps.main.outputs.version_tag }}
-        git push origin ${{ steps.main.outputs.version_tag }}
+        git tag ${{ steps.sem_tag.outputs.version_tag }}
+        git push origin ${{ steps.sem_tag.outputs.version_tag }}
     - name: Release with Gradle
       id: release
       run: |
         ./gradlew publishMavenPublicationToGitHubPackagesRepository -Prelease.useAutomaticVersion=true \
-        -Prelease.releaseVersion=${{ env.RELEASE_VERSION }} \
-        -Prelease.newVersion=${{ env.NEXT_VERSION }}
+        -Prelease.releaseVersion=${{ steps.sem_tag.outputs.version_tag }}
