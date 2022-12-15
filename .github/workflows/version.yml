@@ -49,5 +49,4 @@ jobs:
     - name: Release with Gradle
       id: release
       run: |
-        ./gradlew publishMavenPublicationToGitHubPackagesRepository -Prelease.useAutomaticVersion=true \
-        -Prelease.releaseVersion=${{ steps.tag_version.outputs.new_tag }}
+        ./gradlew publishMavenPublicationToGitHubPackagesRepository -Prelease.releaseVersion=${{ steps.tag_version.outputs.new_tag }}
