@@ -9,7 +9,6 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 group = 'ru.spbstu'
-version = System.getenv('RELEASE_VERSION') ?: "0.0.1"
 sourceCompatibility = '11'
 
 configurations {
@@ -160,7 +159,7 @@ publishing {
     publications {
         maven(MavenPublication) {
             groupId = 'ru.spbstu'
-            version = version
+            version = System.getenv('RELEASE_VERSION') ?: "1.0.2"
             from components.java
         }
     }
