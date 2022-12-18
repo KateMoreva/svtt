@@ -11,8 +11,8 @@ import ru.spbstu.news.searcher.indexes.SearchIndexDocument;
 public interface SearchResultsProcessor<T> {
 
     T getFindImageResult(@NotNull String query,
-                                       @NotNull List<SearchResult> databaseEntities,
-                                       @NotNull Map<Long, SearchIndexDocument> databaseIdsToDocument,
-                                       @NotNull Long totalCount);
+                         @NotNull List<SearchResult> databaseEntities,
+                         @NotNull Map<Long, SearchIndexDocument> databaseIdsToDocument,
+                         @NotNull Long totalCount);
 
 }

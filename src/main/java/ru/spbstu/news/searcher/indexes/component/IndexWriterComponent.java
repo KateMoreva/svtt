@@ -59,12 +59,12 @@ public class IndexWriterComponent implements IndexerComponent {
         return partition - 1;
     }
 
-    public void setOnIndexUpdateListener(Runnable onIndexUpdateListener) {
-        this.onIndexUpdateListener = onIndexUpdateListener;
-    }
-
     protected Runnable getOnIndexUpdateListener() {
         return onIndexUpdateListener;
+    }
+
+    public void setOnIndexUpdateListener(Runnable onIndexUpdateListener) {
+        this.onIndexUpdateListener = onIndexUpdateListener;
     }
 
     @PostConstruct

@@ -22,11 +22,9 @@ import ru.spbstu.news.searcher.indexes.component.InMemoryIndexComponent;
 @Component
 public class TitleExtractor {
 
-    private static final Logger logger = LoggerFactory.getLogger(TitleExtractor.class);
-
     public final static Integer LENGTH_TO_SPLIT_FULL_TEXT = 30;
     public final static Integer DEFAULT_LENGTH_OF_TITLE_FROM_START = 20;
-
+    private static final Logger logger = LoggerFactory.getLogger(TitleExtractor.class);
     private final InMemoryIndexComponent inMemoryIndexComponent;
 
     @Autowired
@@ -50,12 +48,12 @@ public class TitleExtractor {
             }
             RAMDirectory directory = inMemoryIndexComponent.index(documentsToStoreInMemoryIndex);
             Document document =
-                    inMemoryIndexComponent.searchIndex(SearchIndexDocumentConverter.createQueryFullText(query), directory);
+                inMemoryIndexComponent.searchIndex(SearchIndexDocumentConverter.createQueryFullText(query), directory);
             if (document == null) {
                 logger.warn("Document is null after search for title from text for \n" +
-                        "fullText: [{}],\n" +
-                        "database: [{}],\n" +
-                        "query: [{}]", fullText, databaseId, query);
+                    "fullText: [{}],\n" +
+                    "database: [{}],\n" +
+                    "query: [{}]", fullText, databaseId, query);
                 return defaultResult(fullText);
             }
             SearchIndexDocument searchIndexDocument = SearchIndexDocumentConverter.convertFromMemory(document);
@@ -64,9 +62,9 @@ public class TitleExtractor {
             return title.substring(title.indexOf(":") + 1);
         } catch (ParseException e) {
             logger.warn("Cannot parse string query to lucene query \n" +
-                    "fullText: [{}],\n" +
-                    "database: [{}],\n" +
-                    "query: [{}]", fullText, databaseId, query, e);
+                "fullText: [{}],\n" +
+                "database: [{}],\n" +
+                "query: [{}]", fullText, databaseId, query, e);
         }
         return defaultResult(fullText);
     }

@@ -93,7 +93,7 @@ public class IndexSearcherComponent implements Searcher {
         return Pair.create(allPartitionDocs.stream()
                 .limit(docsCount)
                 .collect(Collectors.toList()),
-                totalCount);
+            totalCount);
     }
 
     @NotNull
@@ -114,7 +114,7 @@ public class IndexSearcherComponent implements Searcher {
             return search(query, SearchIndexDocumentConverter.createSort(), docsCount);
         } catch (LuceneOpenException e) {
             logger.warn("Cannot find search index documents with text query: [{}], docsCount: [{}]",
-                    textQuery, docsCount, e);
+                textQuery, docsCount, e);
             return Pair.create(Collections.emptyList(), 0L);
         }
     }

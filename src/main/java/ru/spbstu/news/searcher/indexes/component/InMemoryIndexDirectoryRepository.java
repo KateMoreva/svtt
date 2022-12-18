@@ -44,11 +44,11 @@ public class InMemoryIndexDirectoryRepository {
             boolean acquired = semaphore.tryAcquire(3, TimeUnit.SECONDS);
             if (acquired) {
                 RAMDirectory directory = directoriesMap.entrySet()
-                        .stream()
-                        .filter(e -> !e.getValue())
-                        .map(Map.Entry::getKey)
-                        .findFirst()
-                        .orElse(null);
+                    .stream()
+                    .filter(e -> !e.getValue())
+                    .map(Map.Entry::getKey)
+                    .findFirst()
+                    .orElse(null);
                 directoriesMap.put(directory, true);
                 return directory;
             } else {
@@ -77,12 +77,12 @@ public class InMemoryIndexDirectoryRepository {
         return semaphore;
     }
 
-    protected Lock getLock() {
-        return lock;
-    }
-
     public void setSemaphore(Semaphore semaphore) {
         this.semaphore = semaphore;
+    }
+
+    protected Lock getLock() {
+        return lock;
     }
 
 }

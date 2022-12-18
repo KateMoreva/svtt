@@ -27,21 +27,19 @@ import lombok.ToString;
 @ToString
 public class SearchResult {
 
+    @Id
+    @GeneratedValue
+    private Long id;
+    @Column(columnDefinition = "TEXT")
+    private String url;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Column(columnDefinition = "TEXT")
+    private List<String> imageUrls;
+
     public SearchResult(final String url, final List<String> imageUrls) {
         this.url = url;
         this.imageUrls = imageUrls;
     }
-
-    @Id
-    @GeneratedValue
-    private Long id;
-
-    @Column(columnDefinition="TEXT")
-    private String url;
-
-    @ElementCollection(fetch = FetchType.EAGER)
-    @Column(columnDefinition = "TEXT")
-    private List<String> imageUrls;
 
     @Override
     public boolean equals(Object o) {
@@ -49,10 +47,10 @@ public class SearchResult {
         if (o == null || getClass() != o.getClass()) return false;
         SearchResult that = (SearchResult) o;
         return Objects.equals(id, that.id) &&
-                Objects.equals(url, that.url) &&
-                Iterables.elementsEqual(
-                        imageUrls != null ? imageUrls : new ArrayList<>(),
-                        that.imageUrls != null ? that.imageUrls : new ArrayList<>());
+            Objects.equals(url, that.url) &&
+            Iterables.elementsEqual(
+                imageUrls != null ? imageUrls : new ArrayList<>(),
+                that.imageUrls != null ? that.imageUrls : new ArrayList<>());
     }
 
     @Override

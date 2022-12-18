@@ -35,14 +35,12 @@ import ru.spbstu.news.searcher.indexes.exceptions.LuceneOpenException;
 @Service
 public class SearchResultService {
 
-    private static final Logger logger = LoggerFactory.getLogger(SearchResultService.class);
-
     public static final int DEFAULT_PAGE_SIZE = 10;
     public static final int DEFAULT_IMAGE_PAGE_SIZE = 20;
     public static final int FIRST_IMAGE_PAGE_SIZE = 40;
     public static final int MAX_FULL_TEXT_LENGTH = 32766;
     public static final int SIMILAR_ITEMS_COUNT = 8;
-
+    private static final Logger logger = LoggerFactory.getLogger(SearchResultService.class);
     private final SearchResultRepository searchResultRepository;
     private final IndexSearcherComponent indexSearcherComponent;
     private final IndexWriterComponent indexWriterComponent;
@@ -98,8 +96,8 @@ public class SearchResultService {
             int startIndex = (page - 1) * (pageSize);
             int endIndex = startIndex + pageSize;
             return new FindByTextResult(
-                    searchItems.subList(startIndex, Math.min(endIndex, searchItems.size())),
-                    resultsFromIndex.getTotalCount());
+                searchItems.subList(startIndex, Math.min(endIndex, searchItems.size())),
+                resultsFromIndex.getTotalCount());
         }
         throw new ResultNotFoundException("No results for query: " + textQuery);
     }
@@ -111,8 +109,8 @@ public class SearchResultService {
         Pair<List<SearchIndexDocument>, Long> searchIndexDocumentsResult = indexSearcherComponent.searchIndexDocuments(query, searchMaxThreshold);
         Long totalCount = searchIndexDocumentsResult.getValue();
         Map<Long, SearchIndexDocument> databaseIdsToDocument = searchIndexDocumentsResult.getKey()
-                .stream()
-                .collect(Collectors.toMap(SearchIndexDocument::getDatabaseId, Function.identity()));
+            .stream()
+            .collect(Collectors.toMap(SearchIndexDocument::getDatabaseId, Function.identity()));
         List<SearchResult> databaseEntities = searchResultRepository.findAllById(databaseIdsToDocument.keySet());
         if (CollectionUtils.isNotEmpty(databaseEntities)) {
             return searchResultsProcessor.getFindImageResult(query, databaseEntities, databaseIdsToDocument, totalCount);
@@ -127,9 +125,9 @@ public class SearchResultService {
         int startIndex = (page - 1) * (pageSize);
         int endIndex = startIndex + pageSize;
         List<SearchItem> searchItems = cacheItems.subList(startIndex, Math.min(endIndex, cacheItems.size()))
-                .stream()
-                .map(item -> new SearchItem(item.getId(), item.getTitle(), item.getUrl()))
-                .collect(Collectors.toList());
+            .stream()
+            .map(item -> new SearchItem(item.getId(), item.getTitle(), item.getUrl()))
+            .collect(Collectors.toList());
         return new FindByTextResult(searchItems, cacheTotalCount);
     }
 
@@ -137,8 +135,8 @@ public class SearchResultService {
         FindByTextResult textResult = findByText(query, 1, SIMILAR_ITEMS_COUNT);
         List<SearchItem> searchItems = textResult.getSearchItems();
         return searchItems.stream()
-                .map(SearchItem::getTitle)
-                .collect(Collectors.toList());
+            .map(SearchItem::getTitle)
+            .collect(Collectors.toList());
     }
 
     public FindImageResult findImages(int page, String query) throws ResultNotFoundException {
@@ -161,8 +159,8 @@ public class SearchResultService {
             int startIndex = getStartIndexForImage(page);
             int endIndex = getEndIndexForImage(page, startIndex);
             return new FindImageResult(
-                    searchItems.subList(startIndex, Math.min(searchItems.size(), endIndex)),
-                    resultsFromIndex.getTotalCount());
+                searchItems.subList(startIndex, Math.min(searchItems.size(), endIndex)),
+                resultsFromIndex.getTotalCount());
         }
         throw new ResultNotFoundException("No results for query: " + query);
     }
@@ -201,10 +199,10 @@ public class SearchResultService {
             for (String imageUrl : imageUrls) {
                 if (StringUtils.isNotBlank(imageUrl)) {
                     imageItems.add(new ImageItem(
-                            cacheItem.getId(),
-                            imageUrl,
-                            cacheItem.getTitle(),
-                            cacheItem.getUrl()
+                        cacheItem.getId(),
+                        imageUrl,
+                        cacheItem.getTitle(),
+                        cacheItem.getUrl()
                     ));
                 }
             }

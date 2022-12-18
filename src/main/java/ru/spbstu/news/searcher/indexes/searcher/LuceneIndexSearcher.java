@@ -62,7 +62,7 @@ public class LuceneIndexSearcher implements Searcher {
             logger.warn("The index file with name: [{}] is already opened", indexFile.getName());
             throw new LuceneIndexingException("The index file is already opened!");
         }
-         try {
+        try {
             this.indexFile = new File(indexDir + File.separator + partition);
             this.indexDirectory = FSDirectory.open(this.indexFile.toPath());
         } catch (IOException e) {

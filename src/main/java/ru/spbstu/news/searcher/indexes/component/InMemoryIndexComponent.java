@@ -35,7 +35,7 @@ public class InMemoryIndexComponent {
 
     private static final int DEFAULT_TOP_DOCS_COUNT = 1;
 
-    private final Analyzer analyzer ;
+    private final Analyzer analyzer;
     private final InMemoryIndexDirectoryRepository inMemoryIndexDirectoryRepository;
 
     public InMemoryIndexComponent(@NotNull InMemoryIndexDirectoryRepository inMemoryIndexDirectoryRepository) {
@@ -57,10 +57,10 @@ public class InMemoryIndexComponent {
                 writer.addDocument(document);
             }
         } catch (LockObtainFailedException ex) {
-            logger.warn("Lock failed",ex);
+            logger.warn("Lock failed", ex);
         } catch (IOException e) {
             logger.warn("Cannot index documents [{}] in memory index",
-                    Arrays.toString(documentsToStoreInMemoryIndex.toArray()), e);
+                Arrays.toString(documentsToStoreInMemoryIndex.toArray()), e);
         }
         return directory;
     }
