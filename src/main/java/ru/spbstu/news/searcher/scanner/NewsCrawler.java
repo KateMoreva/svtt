@@ -25,15 +25,15 @@ import ru.spbstu.news.searcher.service.SearchResultService;
 public class NewsCrawler extends WebCrawler {
     private static final Logger logger = org.slf4j.LoggerFactory.getLogger(NewsCrawler.class);
     private static final Pattern FILE_ENDING_EXCLUSION_PATTERN = Pattern.compile(".*(\\.(" +
-            "css|js" +
-            "|bmp|gif|jpe?g|JPE?G|png|tiff?|ico|nef|raw" +
-            "|mid|mp2|mp3|mp4|wav|wma|flv|mpe?g" +
-            "|avi|mov|mpeg|ram|m4v|wmv|rm|smil" +
-            "|pdf|doc|docx|pub|xls|xlsx|vsd|ppt|pptx" +
-            "|swf" +
-            "|zip|rar|gz|bz2|7z|bin" +
-            "|xml|txt|java|c|cpp|exe" +
-            "))$");
+        "css|js" +
+        "|bmp|gif|jpe?g|JPE?G|png|tiff?|ico|nef|raw" +
+        "|mid|mp2|mp3|mp4|wav|wma|flv|mpe?g" +
+        "|avi|mov|mpeg|ram|m4v|wmv|rm|smil" +
+        "|pdf|doc|docx|pub|xls|xlsx|vsd|ppt|pptx" +
+        "|swf" +
+        "|zip|rar|gz|bz2|7z|bin" +
+        "|xml|txt|java|c|cpp|exe" +
+        "))$");
 
     private static final Pattern imgPatterns = Pattern.compile(".*(\\.(bmp|gif|jpe?g|jpg|png|tiff?))$");
 
@@ -103,24 +103,24 @@ public class NewsCrawler extends WebCrawler {
 
     public List<String> filterImages(@NotNull final Set<WebURL> urls) {
         return urls.stream()
-                .filter((url) -> {
-                    final String href = url.getURL().toLowerCase();
-                    if (!imgPatterns.matcher(href).matches()
-                            || (href.contains("logo") || href.contains("icon"))) {
-                        return false;
-                    }
-                    try {
-                        URL imageUrl = new URL(href);
-                        URLConnection conn = imageUrl.openConnection();
-                        if (conn.getContentLength() >= (10 * 1024)) {
-                            return true;
-                        }
-                    } catch (Exception ex) {
-                        return false;
-                    }
+            .filter((url) -> {
+                final String href = url.getURL().toLowerCase();
+                if (!imgPatterns.matcher(href).matches()
+                    || (href.contains("logo") || href.contains("icon"))) {
                     return false;
-                })
-                .map(WebURL::toString)
-                .collect(Collectors.toList());
+                }
+                try {
+                    URL imageUrl = new URL(href);
+                    URLConnection conn = imageUrl.openConnection();
+                    if (conn.getContentLength() >= (10 * 1024)) {
+                        return true;
+                    }
+                } catch (Exception ex) {
+                    return false;
+                }
+                return false;
+            })
+            .map(WebURL::toString)
+            .collect(Collectors.toList());
     }
 }

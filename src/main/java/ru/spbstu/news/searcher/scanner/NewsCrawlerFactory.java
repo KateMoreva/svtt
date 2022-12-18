@@ -10,9 +10,9 @@ import ru.spbstu.news.searcher.service.SearchResultService;
 @Component
 public class NewsCrawlerFactory implements CrawlController.WebCrawlerFactory<NewsCrawler> {
     @NotNull
-    private final SearchResultService searchResultService;
-    @NotNull
     public final CrawlerConfig crawlerConfig;
+    @NotNull
+    private final SearchResultService searchResultService;
 
     public NewsCrawlerFactory(@NotNull final SearchResultService searchResultService,
                               @NotNull final CrawlerConfig crawlerConfig) {

@@ -22,11 +22,9 @@ import org.slf4j.LoggerFactory;
 
 public class SearchIndexDocumentConverter {
 
-    private static final Logger logger = LoggerFactory.getLogger(SearchIndexDocumentConverter.class);
-
     public static final String DATABASE_ID_FIELD = "database_id";
     public static final String FULL_TEXT_FIELD = "full_text";
-
+    private static final Logger logger = LoggerFactory.getLogger(SearchIndexDocumentConverter.class);
     private static final Analyzer analyzer = AnalyzerProvider.provide();
 
     @Nullable
@@ -101,7 +99,7 @@ public class SearchIndexDocumentConverter {
     public static SearchIndexDocument convertFromMemory(@NotNull Document document) {
         Validate.notNull(document);
         IndexableField databaseField = document.getField(DATABASE_ID_FIELD);
-        String databaseIdString =  databaseField.stringValue();
+        String databaseIdString = databaseField.stringValue();
         Long databaseId = Long.parseLong(databaseIdString);
         IndexableField fullTextField = document.getField(FULL_TEXT_FIELD);
         String fullText = fullTextField.stringValue();

@@ -16,24 +16,23 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class CacheItemSerializer {
 
-    private static final Logger logger = LoggerFactory.getLogger(CacheItemSerializer.class);
-
     public static final String DELIMITER = "~@~";
     public static final String TOTAL_COUNT_DELIMITER = "@@@";
+    private static final Logger logger = LoggerFactory.getLogger(CacheItemSerializer.class);
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     public static String serialize(@NotNull Collection<SearchCacheItem> cacheItems, Long totalCount) {
         String cacheItemsString = cacheItems.stream()
-                .map(next -> {
-                    try {
-                        return objectMapper.writeValueAsString(next);
-                    } catch (JsonProcessingException e) {
-                        logger.warn("Cannot serialize cache items", e);
-                        return null;
-                    }
-                })
-                .filter(Objects::nonNull)
-                .collect(Collectors.joining(DELIMITER));
+            .map(next -> {
+                try {
+                    return objectMapper.writeValueAsString(next);
+                } catch (JsonProcessingException e) {
+                    logger.warn("Cannot serialize cache items", e);
+                    return null;
+                }
+            })
+            .filter(Objects::nonNull)
+            .collect(Collectors.joining(DELIMITER));
         return String.join(TOTAL_COUNT_DELIMITER, String.valueOf(totalCount), cacheItemsString);
     }
 
@@ -42,16 +41,16 @@ public class CacheItemSerializer {
         long totalCount = Long.parseLong(totalCountAndSearchItems[0]);
         String[] splitedItems = totalCountAndSearchItems[1].split(DELIMITER);
         List<SearchCacheItem> searchCacheItems = Arrays.stream(splitedItems)
-                .map(item -> {
-                    try {
-                        return objectMapper.readValue(item, SearchCacheItem.class);
-                    } catch (JsonProcessingException e) {
-                        logger.warn("Cannot deserialize cache items", e);
-                        return null;
-                    }
-                })
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+            .map(item -> {
+                try {
+                    return objectMapper.readValue(item, SearchCacheItem.class);
+                } catch (JsonProcessingException e) {
+                    logger.warn("Cannot deserialize cache items", e);
+                    return null;
+                }
+            })
+            .filter(Objects::nonNull)
+            .collect(Collectors.toList());
         return Pair.create(totalCount, searchCacheItems);
     }
 

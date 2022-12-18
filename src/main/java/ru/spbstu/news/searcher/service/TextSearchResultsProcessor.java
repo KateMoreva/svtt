@@ -41,19 +41,19 @@ public class TextSearchResultsProcessor implements SearchResultsProcessor<FindBy
         Validate.notNull(databaseIdsToDocument);
         Validate.notNull(totalCount);
         Map<SearchItem, SearchCacheItem> collectMap = databaseEntities.stream()
-                    .map(entity -> {
-                        SearchIndexDocument searchIndexDocument = databaseIdsToDocument.get(entity.getId());
-                        String fullText = searchIndexDocument.getFullText();
-                        Long databaseId = searchIndexDocument.getDatabaseId();
-                        String title = titleExtractor.getTitleFromFullText(fullText, databaseId, query);
-                        return Pair.create(
-                                new SearchItem(entity.getId(), title, entity.getUrl()),
-                                new SearchCacheItem(entity.getId(), title, entity.getUrl(), entity.getImageUrls()));
-                    }).collect(Collectors.toMap(Pair::getKey, Pair::getValue));
+            .map(entity -> {
+                SearchIndexDocument searchIndexDocument = databaseIdsToDocument.get(entity.getId());
+                String fullText = searchIndexDocument.getFullText();
+                Long databaseId = searchIndexDocument.getDatabaseId();
+                String title = titleExtractor.getTitleFromFullText(fullText, databaseId, query);
+                return Pair.create(
+                    new SearchItem(entity.getId(), title, entity.getUrl()),
+                    new SearchCacheItem(entity.getId(), title, entity.getUrl(), entity.getImageUrls()));
+            }).collect(Collectors.toMap(Pair::getKey, Pair::getValue));
         cache.put(query, collectMap.values(), totalCount);
         return new FindByTextResult(
-                new ArrayList<>(collectMap.keySet()),
-                totalCount);
+            new ArrayList<>(collectMap.keySet()),
+            totalCount);
     }
 
 }

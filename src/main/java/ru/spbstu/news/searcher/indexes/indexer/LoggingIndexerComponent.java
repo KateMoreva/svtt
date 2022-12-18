@@ -22,8 +22,9 @@ public class LoggingIndexerComponent implements IndexerComponent {
 
     /**
      * Decorator for IndexerComponent to log if the action was happened.
+     *
      * @param indexerComponent - real indexer
-     * @param loggingEnabled - flag which used to indicate whether we need to log it or not
+     * @param loggingEnabled   - flag which used to indicate whether we need to log it or not
      */
     public LoggingIndexerComponent(IndexerComponent indexerComponent,
                                    boolean loggingEnabled) {

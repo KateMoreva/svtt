@@ -54,24 +54,24 @@ public class ImageSearchResultsProcessor implements SearchResultsProcessor<FindI
                 for (String imageUrl : imageUrls) {
                     if (StringUtils.isNotBlank(imageUrl)) {
                         imageItems.add(new ImageItem(
-                                searchResult.getId(),
-                                imageUrl,
-                                title,
-                                searchResult.getUrl()
+                            searchResult.getId(),
+                            imageUrl,
+                            title,
+                            searchResult.getUrl()
                         ));
                     }
                 }
             }
             searchCacheItems.add(new SearchCacheItem(
-                    searchResult.getId(),
-                    title,
-                    searchResult.getUrl(),
-                    searchResult.getImageUrls()));
+                searchResult.getId(),
+                title,
+                searchResult.getUrl(),
+                searchResult.getImageUrls()));
         }
         cache.put(query, new ArrayList<>(searchCacheItems), totalCount);
         return new FindImageResult(
-                imageItems,
-                imageItems.size()
+            imageItems,
+            imageItems.size()
         );
     }
 

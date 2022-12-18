@@ -21,12 +21,12 @@ public class AnalyzerProvider {
         factoryParams.put(AbstractAnalysisFactory.LUCENE_MATCH_VERSION_PARAM, Version.LUCENE_8_10_0.toString());
 
         return new TokenizerChain(
-                new StandardTokenizerFactory(factoryParams),
-                new TokenFilterFactory[]{
-                        new WordDelimiterGraphFilterFactory(factoryParams),
-                        new LowerCaseFilterFactory(factoryParams),
-                        new RemoveDuplicatesTokenFilterFactory(factoryParams)
-                }
+            new StandardTokenizerFactory(factoryParams),
+            new TokenFilterFactory[]{
+                new WordDelimiterGraphFilterFactory(factoryParams),
+                new LowerCaseFilterFactory(factoryParams),
+                new RemoveDuplicatesTokenFilterFactory(factoryParams)
+            }
         );
     }
 

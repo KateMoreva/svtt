@@ -17,7 +17,7 @@ import org.tartarus.snowball.ext.RussianStemmer;
 
 /**
  * Tokenizer which were changed from Apache Solr TokenizerChain
- * */
+ */
 public final class TokenizerChain extends SolrAnalyzer {
     private static final CharFilterFactory[] EMPTY_CHAR_FITLERS = new CharFilterFactory[0];
     private static final TokenFilterFactory[] EMPTY_TOKEN_FITLERS = new TokenFilterFactory[0];
@@ -31,9 +31,9 @@ public final class TokenizerChain extends SolrAnalyzer {
      */
     public TokenizerChain(CustomAnalyzer customAnalyzer) {
         this(
-                customAnalyzer.getCharFilterFactories().toArray(new CharFilterFactory[0]),
-                customAnalyzer.getTokenizerFactory(),
-                customAnalyzer.getTokenFilterFactories().toArray(new TokenFilterFactory[0]));
+            customAnalyzer.getCharFilterFactories().toArray(new CharFilterFactory[0]),
+            customAnalyzer.getTokenizerFactory(),
+            customAnalyzer.getTokenFilterFactories().toArray(new TokenFilterFactory[0]));
         setPositionIncrementGap(customAnalyzer.getPositionIncrementGap(null));
         setVersion(customAnalyzer.getVersion());
         assert customAnalyzer.getOffsetGap(null) == 1; // note: we don't support setting the offset gap
